@@ -222,6 +222,10 @@ func (r *marathonClient) apiDelete(uri string, post, result interface{}) error {
 }
 
 func (r *marathonClient) apiCall(method, uri string, body, result interface{}) error {
+	return r.apiCallDCOS(method, uri, body, result, "")
+}
+
+func (r *marathonClient) apiCallDCOS(method, uri string, body, result interface{}, DCOS_TOKEN string) error {
 	// Get a member from the cluster
 	marathon, err := r.cluster.GetMember()
 	if err != nil {
@@ -241,6 +245,18 @@ func (r *marathonClient) apiCall(method, uri string, body, result interface{}) e
 	request, err := r.apiRequest(method, url, bytes.NewReader(jsonBody))
 	if err != nil {
 		return err
+	}
+
+	// Add any basic auth and the content headers
+	if r.config.HTTPBasicAuthUser != "" {
+		request.SetBasicAuth(r.config.HTTPBasicAuthUser, r.config.HTTPBasicPassword)
+	}
+	request.Header.Add("Content-Type", "application/json")
+	request.Header.Add("Accept", "application/json")
+
+	// DCOS token, this will override the Authorization header (any basic auth)
+	if DCOS_TOKEN != "" {
+		request.Header.Add("Authorization", "token="+DCOS_TOKEN)
 	}
 
 	response, err := r.httpClient.Do(request)
