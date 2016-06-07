@@ -31,6 +31,8 @@ import (
 	"time"
 )
 
+var MARATHON_TOKEN = ""
+
 // Marathon is the interface to the marathon API
 type Marathon interface {
 	// -- APPLICATIONS ---
@@ -169,6 +171,8 @@ type marathonClient struct {
 //		config:			the configuration to use
 func NewClient(config Config) (Marathon, error) {
 	// step: if no http client, set to default
+
+	fmt.Println(config.URL)
 	if config.HTTPClient == nil {
 		config.HTTPClient = http.DefaultClient
 	}
@@ -222,15 +226,13 @@ func (r *marathonClient) apiDelete(uri string, post, result interface{}) error {
 }
 
 func (r *marathonClient) apiCall(method, uri string, body, result interface{}) error {
-	return r.apiCallDCOS(method, uri, body, result, "")
-}
 
-func (r *marathonClient) apiCallDCOS(method, uri string, body, result interface{}, DCOS_TOKEN string) error {
 	// Get a member from the cluster
 	marathon, err := r.cluster.GetMember()
 	if err != nil {
 		return err
 	}
+
 	url := fmt.Sprintf("%s/%s", marathon, uri)
 
 	var jsonBody []byte
@@ -254,9 +256,8 @@ func (r *marathonClient) apiCallDCOS(method, uri string, body, result interface{
 	request.Header.Add("Content-Type", "application/json")
 	request.Header.Add("Accept", "application/json")
 
-	// DCOS token, this will override the Authorization header (any basic auth)
-	if DCOS_TOKEN != "" {
-		request.Header.Add("Authorization", "token="+DCOS_TOKEN)
+	if MARATHON_TOKEN != "" {
+		request.Header.Add("Authorization", "token="+MARATHON_TOKEN)
 	}
 
 	response, err := r.httpClient.Do(request)
