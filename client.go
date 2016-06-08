@@ -31,8 +31,6 @@ import (
 	"time"
 )
 
-var MARATHON_TOKEN = ""
-
 // Marathon is the interface to the marathon API
 type Marathon interface {
 	// -- APPLICATIONS ---
@@ -171,8 +169,6 @@ type marathonClient struct {
 //		config:			the configuration to use
 func NewClient(config Config) (Marathon, error) {
 	// step: if no http client, set to default
-
-	fmt.Println(config.URL)
 	if config.HTTPClient == nil {
 		config.HTTPClient = http.DefaultClient
 	}
@@ -233,7 +229,13 @@ func (r *marathonClient) apiCall(method, uri string, body, result interface{}) e
 		return err
 	}
 
-	url := fmt.Sprintf("%s/%s", marathon, uri)
+	var url string
+
+	if r.config.MarathonToken != "" {
+		url = fmt.Sprintf("%s/%s", marathon+"/marathon", uri)
+	} else {
+		url = fmt.Sprintf("%s/%s", marathon, uri)
+	}
 
 	var jsonBody []byte
 	if body != nil {
@@ -256,8 +258,8 @@ func (r *marathonClient) apiCall(method, uri string, body, result interface{}) e
 	request.Header.Add("Content-Type", "application/json")
 	request.Header.Add("Accept", "application/json")
 
-	if MARATHON_TOKEN != "" {
-		request.Header.Add("Authorization", "token="+MARATHON_TOKEN)
+	if r.config.MarathonToken != "" {
+		request.Header.Add("Authorization", "token="+r.config.MarathonToken)
 	}
 
 	response, err := r.httpClient.Do(request)

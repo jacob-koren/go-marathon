@@ -41,6 +41,8 @@ type Config struct {
 	HTTPBasicPassword string
 	// CallbackURL custom callback url
 	CallbackURL string
+	// Token for DCOS environment
+	MarathonToken string
 	// LogOutput the output for debug log messages
 	LogOutput io.Writer
 	// HTTPClient is the http client
