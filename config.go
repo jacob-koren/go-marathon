@@ -35,6 +35,8 @@ type Config struct {
 	EventsPort int
 	// the interface we should be listening on for events
 	EventsInterface string
+	// dcos token
+	MarathonToken string
 	// HTTPBasicAuthUser is the http basic auth
 	HTTPBasicAuthUser string
 	// HTTPBasicPassword is the http basic password
