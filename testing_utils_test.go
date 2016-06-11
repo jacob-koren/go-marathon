@@ -121,8 +121,8 @@ func newFakeMarathonEndpoint(t *testing.T, configs *configContainer) *endpoint {
 
 	// step: create the HTTP router
 	mux := http.NewServeMux()
-	mux.HandleFunc("/v2/events", AuthMiddleware(configs.server, eventSrv.Handler("event")))
-	mux.HandleFunc("/", AuthMiddleware(configs.server, func(writer http.ResponseWriter, reader *http.Request) {
+	mux.HandleFunc("/v2/events", authMiddleware(configs.server, eventSrv.Handler("event")))
+	mux.HandleFunc("/", authMiddleware(configs.server, func(writer http.ResponseWriter, reader *http.Request) {
 		content, found := fakeResponses[fmt.Sprintf("%s:%s:%s", reader.Method, reader.RequestURI, configs.server.version)]
 		if !found {
 			http.Error(writer, `{"message": "not found"}`, 404)
@@ -179,8 +179,8 @@ func basicAuthMiddleware(server *serverConfig, next http.HandlerFunc) func(http.
 	}
 }
 
-// basicAuthMiddleware handles basic auth
-func AuthMiddleware(server *serverConfig, next http.HandlerFunc) func(http.ResponseWriter, *http.Request) {
+// authMiddleware handles basic auth
+func authMiddleware(server *serverConfig, next http.HandlerFunc) func(http.ResponseWriter, *http.Request) {
 	unauthorized := `{"message": "invalid username or password"}`
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -196,7 +196,6 @@ func AuthMiddleware(server *serverConfig, next http.HandlerFunc) func(http.Respo
 
 			s := strings.Split(headerValue, "=")
 
-			fmt.Println("serverToken is: " + server.dcosToken + " and request token is: " + s[1])
 			if s[1] != server.dcosToken {
 				http.Error(w, unauthorized, 401)
 				return

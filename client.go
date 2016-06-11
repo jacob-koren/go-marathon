@@ -251,17 +251,6 @@ func (r *marathonClient) apiCall(method, uri string, body, result interface{}) e
 		return err
 	}
 
-	// Add any basic auth and the content headers
-	if r.config.HTTPBasicAuthUser != "" {
-		request.SetBasicAuth(r.config.HTTPBasicAuthUser, r.config.HTTPBasicPassword)
-	}
-	request.Header.Add("Content-Type", "application/json")
-	request.Header.Add("Accept", "application/json")
-
-	if r.config.DCOSToken != "" {
-		request.Header.Add("Authorization", "token="+r.config.DCOSToken)
-	}
-
 	response, err := r.httpClient.Do(request)
 	if err != nil {
 		return err
@@ -302,6 +291,10 @@ func (r *marathonClient) apiRequest(method, url string, reader io.Reader) (*http
 	// Add any basic auth and the content headers
 	if r.config.HTTPBasicAuthUser != "" && r.config.HTTPBasicPassword != "" {
 		request.SetBasicAuth(r.config.HTTPBasicAuthUser, r.config.HTTPBasicPassword)
+	}
+
+	if r.config.DCOSToken != "" {
+		request.Header.Add("Authorization", "token="+r.config.DCOSToken)
 	}
 
 	request.Header.Add("Content-Type", "application/json")
