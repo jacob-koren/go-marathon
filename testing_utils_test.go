@@ -179,7 +179,7 @@ func basicAuthMiddleware(server *serverConfig, next http.HandlerFunc) func(http.
 	}
 }
 
-// authMiddleware handles basic auth
+// authMiddleware handles basic auth and dcos_acs_token
 func authMiddleware(server *serverConfig, next http.HandlerFunc) func(http.ResponseWriter, *http.Request) {
 	unauthorized := `{"message": "invalid username or password"}`
 
