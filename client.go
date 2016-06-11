@@ -231,7 +231,7 @@ func (r *marathonClient) apiCall(method, uri string, body, result interface{}) e
 
 	var url string
 
-	if r.config.MarathonToken != "" {
+	if r.config.DCOSToken != "" {
 		url = fmt.Sprintf("%s/%s", marathon+"/marathon", uri)
 	} else {
 		url = fmt.Sprintf("%s/%s", marathon, uri)
@@ -258,8 +258,8 @@ func (r *marathonClient) apiCall(method, uri string, body, result interface{}) e
 	request.Header.Add("Content-Type", "application/json")
 	request.Header.Add("Accept", "application/json")
 
-	if r.config.MarathonToken != "" {
-		request.Header.Add("Authorization", "token="+r.config.MarathonToken)
+	if r.config.DCOSToken != "" {
+		request.Header.Add("Authorization", "token="+r.config.DCOSToken)
 	}
 
 	response, err := r.httpClient.Do(request)
@@ -288,7 +288,6 @@ func (r *marathonClient) apiCall(method, uri string, body, result interface{}) e
 		}
 		return nil
 	}
-
 	return NewAPIError(response.StatusCode, respBody)
 }
 

@@ -35,16 +35,14 @@ type Config struct {
 	EventsPort int
 	// the interface we should be listening on for events
 	EventsInterface string
-	// dcos token
-	MarathonToken string
 	// HTTPBasicAuthUser is the http basic auth
 	HTTPBasicAuthUser string
 	// HTTPBasicPassword is the http basic password
 	HTTPBasicPassword string
 	// CallbackURL custom callback url
 	CallbackURL string
-	// Token for DCOS environment
-	MarathonToken string
+	// Token for DCOS environment, This will override the Authorization header
+	DCOSToken string
 	// LogOutput the output for debug log messages
 	LogOutput io.Writer
 	// HTTPClient is the http client
