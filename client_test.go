@@ -160,8 +160,6 @@ func TestAPIRequestDCOS(t *testing.T) {
 
 		config := NewDefaultConfig()
 		config.DCOSToken = x.DCOSToken
-		config.HTTPBasicAuthUser = x.Username
-		config.HTTPBasicPassword = x.Password
 
 		endpoint = newFakeMarathonEndpoint(t, &configContainer{
 			client: &config,
