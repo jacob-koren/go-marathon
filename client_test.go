@@ -129,8 +129,6 @@ func TestAPIRequestDCOS(t *testing.T) {
 	cases := []struct {
 		DCOSToken       string
 		ServerDCOSToken string
-		Username        string
-		Password        string
 		ServerUsername  string
 		ServerPassword  string
 		Ok              bool
@@ -138,8 +136,6 @@ func TestAPIRequestDCOS(t *testing.T) {
 		{
 			DCOSToken:       "should_pass",
 			ServerDCOSToken: "should_pass",
-			Username:        "",
-			Password:        "",
 			ServerUsername:  "",
 			ServerPassword:  "",
 			Ok:              true,
@@ -147,8 +143,6 @@ func TestAPIRequestDCOS(t *testing.T) {
 		{
 			DCOSToken:       "should_pass",
 			ServerDCOSToken: "",
-			Username:        "",
-			Password:        "",
 			ServerUsername:  "",
 			ServerPassword:  "",
 			Ok:              true,
@@ -156,8 +150,6 @@ func TestAPIRequestDCOS(t *testing.T) {
 		{
 			DCOSToken:       "should_not_pass",
 			ServerDCOSToken: "different_token",
-			Username:        "",
-			Password:        "",
 			ServerUsername:  "",
 			ServerPassword:  "",
 			Ok:              false,
